@@ -1,9 +1,9 @@
-import Hero from './_components/Hero/Hero';
+import Map from "./_components/Map/Map";
 
 export default function Home() {
-  return (
-    <main>
-      <Hero />
-    </main>
-  );
+    return (
+        <main>
+            <Map />
+        </main>
+    );
 }
