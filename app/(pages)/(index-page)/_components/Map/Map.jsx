@@ -11,7 +11,7 @@ const Map = () => {
     const [address, setAddress] = useState("");
 
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: "AIzaSyD-Hn1r-4KCpsUAsdZa9kGutN9DeFUoI-w",
+        googleMapsApiKey: "",
         libraries: ["places"],
     });
 
