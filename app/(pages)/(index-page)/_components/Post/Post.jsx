@@ -1,12 +1,22 @@
+"use client";
 import styles from "./Post.module.scss";
 
-export function PostButton() {
-    return <div onClick="">Upload post</div>;
+export function PostButton({ menuRef }) {
+    return (
+        <div
+            onClick={() => {
+                menuRef.current.showModal();
+            }}
+            className={styles.postButton}
+        >
+            Upload post
+        </div>
+    );
 }
 
-export function PostMenu() {
+export function PostMenu({ menuRef }) {
     return (
-        <dialog id="post-dialog">
+        <dialog id="post-dialog" className={styles.postMenu} ref={menuRef}>
             <h1>Upload post</h1>
             <section>
                 <label>Title</label>
@@ -17,7 +27,13 @@ export function PostMenu() {
                 <input type="text"></input>
             </section>
             <section>
-                <button>Cancel</button>
+                <button
+                    onClick={() => {
+                        menuRef.current.close();
+                    }}
+                >
+                    Cancel
+                </button>
                 <button>Post!</button>
             </section>
         </dialog>

@@ -7,11 +7,10 @@ const Map = () => {
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [searchLngLat, setSearchLngLat] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
-    const autoCompleteRef = useRef(null);
-    const [address, setAddress] = useState("");
+    const autocompleteRef = useRef(null);
 
     const { isLoaded } = useLoadScript({
-        googleMapsApiKey: "",
+        googleMapsApiKey: process.env.google_map_api,
         libraries: ["places"],
     });
 
@@ -20,7 +19,7 @@ const Map = () => {
     const center = { lat: 38.539895, lng: -121.754247 };
 
     const handlePlaceChanged = () => {
-        const place = autoCompleteRef.current.getPlace();
+        const place = autocompleteRef.current.getPlace();
         setSelectedPlace(place);
         setSearchLngLat({
             lat: place.geometry.location.lat(),
@@ -37,29 +36,31 @@ const Map = () => {
     return (
         <div
             style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "20px",
+                // display: "flex",
+                // flexDirection: "column",
+                // justifyContent: "center",
+                // alignItems: "center",
+                // gap: "20px",
+                height: "100%",
+                flex: "1 1 auto",
             }}
         >
-            <Autocomplete
+            {/* <Autocomplete
                 onLoad={(autocomplete) => {
                     console.log("Autocomplete loaded:", autocomplete);
-                    autoCompleteRef.current = autocomplete;
+                    autocompleteRef.current = autocomplete;
                 }}
                 onPlaceChanged={handlePlaceChanged}
                 options={{ fields: ["address_components", "geometry", "name"] }}
             >
                 <input type="text" placeholder="Search for a location" />
-            </Autocomplete>
+            </Autocomplete> */}
 
             <GoogleMap
                 zoom={currentLocation || selectedPlace ? 18 : 15}
                 center={currentLocation || searchLngLat || center}
                 mapContainerClassName="map"
-                mapContainerStyle={{ width: "80%", height: "600px", margin: "auto" }}
+                mapContainerStyle={{ width: "100vw", height: "100%", margin: "auto" }}
                 onLoad={onMapLoad}
             >
                 {selectedPlace && <Marker position={searchLngLat} />}
