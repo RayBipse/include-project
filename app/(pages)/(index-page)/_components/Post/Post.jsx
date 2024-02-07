@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import styles from "./Post.module.scss";
 
 export function PostButton({ menuRef }) {
@@ -14,19 +15,44 @@ export function PostButton({ menuRef }) {
     );
 }
 
-export function PostMenu({ menuRef }) {
+export function PostMenu({ menuRef, onClose, selectedPoint }) {
+    const [title, setTitle] = useState("");
+    const [image, setImage] = useState(null);
+    const [description, setDescription] = useState("");
+
+    const onPost = async (data) => {
+        try {
+            console.log(data);
+            const response = await fetch("http://localhost:3000/api/posts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                console.log("Post created successfully");
+            } else {
+                console.error("Failed to create post");
+            }
+        } catch (error) {
+            console.error("An error occurred while creating the post:", error);
+        }
+    };
+
     return (
         <dialog id="post-dialog" className={styles.postMenu} ref={menuRef}>
-            <h1>Upload post</h1>
-            <section>
+            <h1 className={styles.modalTitle}>Upload post</h1>
+            <section className={styles.modalInputs}>
                 <label>Title</label>
-                <input type="text"></input>
+                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <label>Image</label>
-                <input type="file"></input>
+                <input type="file" onChange={(e) => setImage(e.target.files[0])} />
                 <label>Description</label>
-                <input type="text"></input>
+                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
             </section>
-            <section>
+            <section className={styles.sectionButtons}>
                 <button
                     onClick={() => {
                         menuRef.current.close();
@@ -34,7 +60,7 @@ export function PostMenu({ menuRef }) {
                 >
                     Cancel
                 </button>
-                <button>Post!</button>
+                <button onClick={() => onPost({ title, description })}>Post!</button>
             </section>
         </dialog>
     );

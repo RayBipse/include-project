@@ -1,9 +1,23 @@
 "use client";
 import { useState, useRef } from "react";
+import { PostButton, PostMenu } from "../Post/Post";
 
-import { GoogleMap, useLoadScript, Marker, Autocomplete } from "@react-google-maps/api";
+import { GoogleMap, useLoadScript, Marker, Autocomplete, Circle } from "@react-google-maps/api";
 
-const Map = () => {
+const Map = ({ menuRef }) => {
+    const [showPostMenu, setShowPostMenu] = useState(false);
+    const [selectedPoint, setSelectedPoint] = useState(null);
+    const [gridPoints, setGridPoints] = useState([
+        { id: 1, position: { lat: 38.543777, lng: -121.762821 } },
+        { id: 2, position: { lat: 38.543777, lng: -121.755154 } },
+        { id: 3, position: { lat: 38.543777, lng: -121.747304 } },
+        { id: 4, position: { lat: 38.53873, lng: -121.763087 } },
+        { id: 5, position: { lat: 38.53873, lng: -121.755154 } },
+        { id: 6, position: { lat: 38.53873, lng: -121.747304 } },
+        { id: 7, position: { lat: 38.533767, lng: -121.76298 } },
+        { id: 8, position: { lat: 38.533767, lng: -121.755154 } },
+        { id: 9, position: { lat: 38.533767, lng: -121.747304 } },
+    ]);
     const [selectedPlace, setSelectedPlace] = useState(null);
     const [searchLngLat, setSearchLngLat] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
@@ -17,6 +31,17 @@ const Map = () => {
     if (!isLoaded) return <div>Loading...</div>;
 
     const center = { lat: 38.539895, lng: -121.754247 };
+
+    const handleGridPointClick = (point) => {
+        console.log(`Clicked on grid point ${point.id}`, point.position);
+        setSelectedPoint(point);
+        setShowPostMenu(true);
+    };
+
+    const handleClosePostMenu = () => {
+        setSelectedPoint(null);
+        setShowPostMenu(false);
+    };
 
     const handlePlaceChanged = () => {
         const place = autocompleteRef.current.getPlace();
@@ -63,9 +88,27 @@ const Map = () => {
                 mapContainerStyle={{ width: "100vw", height: "100%", margin: "auto" }}
                 onLoad={onMapLoad}
             >
+                {gridPoints.map((point) => (
+                    <Circle
+                        key={point.id}
+                        center={point.position}
+                        radius={270}
+                        onClick={() => handleGridPointClick(point)}
+                        options={{
+                            strokeColor: "blue",
+                            strokeOpacity: 0.2,
+                            strokeWeight: 1,
+                            fillColor: "blue",
+                            fillOpacity: 0.2,
+                        }}
+                    />
+                ))}
+
                 {selectedPlace && <Marker position={searchLngLat} />}
                 {currentLocation && <Marker position={currentLocation} />}
             </GoogleMap>
+
+            {showPostMenu && <PostMenu menuRef={menuRef} onClose={handleClosePostMenu} selectedPoint={selectedPoint} />}
         </div>
     );
 };

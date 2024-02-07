@@ -1,14 +1,79 @@
 .postButton {
     padding: 15px 30px 15px 30px;
-    background-color: #FFEE94;
+    background-color: white;
     border-radius: 18px;
     border: 1px solid #929292;
 }
 
 .postMenu {
-    position: absolute;
+    position: fixed;
+    top: 24%;
+    left: 25%;
     width: 50%;
-    height: 50%;
-    left: 50%;
-    top: 50%;
+    height: 53%;
+    background-color: #FFEE94;
+    border-radius: 18px;
+    border: 1px solid #929292;
+    display: flex;
+    flex-direction: column;
+    * {
+        padding: 5px;
+    }
+}
+
+.postMenu::backdrop {
+    background: rgb(0 0 0 / 25%);
+}
+
+.modalTitle {
+    text-align: center;
+    padding-top: 20px;
+    font-size: 2em;
+}
+
+.modalInputs {
+    display: flex;
+    flex-direction: column;
+    padding-left: 10%;
+    padding-right: 10%;
+    label {
+        margin-bottom: 5px;
+        font-size: 1.2em;
+    }
+    input[type="file"] {
+        background-color: white;
+    }
+    input {
+        margin-bottom: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        height: 35px;
+    }
+}
+
+.sectionButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+
+    button {
+        padding: 10px 20px;
+        background-color: #FFEE94;
+        border-radius: 8px;
+        border: 1px solid #929292;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+    button:first-child {
+        margin-left: 10%;
+        margin-right: 10px;
+        background-color: white;
+    }
+
+    button:last-child {
+        margin-right: 10%;
+        background-color: #FFC94F;
+    }
 }
