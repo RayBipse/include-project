@@ -15,14 +15,48 @@ export function PostButton({ menuRef }) {
     );
 }
 
-export function PostMenu({ menuRef, onClose, selectedPoint }) {
+export function PostMenu({ menuRef }) {
     const [title, setTitle] = useState("");
-    const [image, setImage] = useState(null);
+    const [area, setArea] = useState("");
     const [description, setDescription] = useState("");
+    const [image, setImage] = useState(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+        }
+    };
+
+    const handlePost = async () => {
+        if (image) {
+            try {
+                const imageData = await readFile(image);
+                onPost({ title, description, area, imageData });
+                menuRef.current.close();
+            } catch (error) {
+                console.error("Error reading image file", error);
+            }
+        } else {
+            console.error("No image found");
+        }
+    };
+
+    const readFile = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                resolve(reader.result);
+            };
+            reader.onerror = (error) => {
+                reject(error);
+            };
+            reader.readAsDataURL(file);
+        });
+    };
 
     const onPost = async (data) => {
         try {
-            console.log(data);
             const response = await fetch("http://localhost:3000/api/posts", {
                 method: "POST",
                 headers: {
@@ -48,7 +82,9 @@ export function PostMenu({ menuRef, onClose, selectedPoint }) {
                 <label>Title</label>
                 <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
                 <label>Image</label>
-                <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+                <input type="file" onChange={handleImageChange} />
+                <label>Area ID</label>
+                <input type="text" value={area} onChange={(e) => setArea(e.target.value)} />
                 <label>Description</label>
                 <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
             </section>
@@ -60,7 +96,7 @@ export function PostMenu({ menuRef, onClose, selectedPoint }) {
                 >
                     Cancel
                 </button>
-                <button onClick={() => onPost({ title, description })}>Post!</button>
+                <button onClick={() => handlePost()}>Post!</button>
             </section>
         </dialog>
     );
